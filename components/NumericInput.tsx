@@ -78,6 +78,9 @@ export default function NumericInput({
     // Special case: if value is exactly min (1), go to 0.01
     if (currentValue === min) {
       onChange?.(0.01);
+    } else if (currentValue < 1) {
+      // Don't allow decrementing below 1 (except the special case above)
+      return;
     } else {
       const newValue = Math.max(min, currentValue - step);
       onChange?.(newValue);
