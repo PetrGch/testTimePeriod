@@ -75,8 +75,13 @@ export default function NumericInput({
 
   const handleDecrement = () => {
     const currentValue = value ?? min;
-    const newValue = Math.max(min, currentValue - step);
-    onChange?.(newValue);
+    // Special case: if value is exactly min (1), go to 0.01
+    if (currentValue === min) {
+      onChange?.(0.01);
+    } else {
+      const newValue = Math.max(min, currentValue - step);
+      onChange?.(newValue);
+    }
   };
 
   return (
@@ -110,7 +115,7 @@ export default function NumericInput({
         <Button
           icon={<DownOutlined />}
           onClick={handleDecrement}
-          disabled={value !== undefined && value !== null && value <= min}
+          disabled={value !== undefined && value !== null && value < 1}
           size="small"
           style={{ height: '20px', padding: '0 8px' }}
         />
