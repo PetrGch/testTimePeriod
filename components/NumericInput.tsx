@@ -31,12 +31,9 @@ export default function NumericInput({
     }
   }, [value]);
 
-  // Format: hide .00 for whole numbers, show decimals otherwise
+  // Format: always show exactly 2 decimal places
   const formatValue = (val: number): string => {
-    if (Math.abs(val % 1) < 0.0001) {
-      return Math.round(val).toString();
-    }
-    return val.toFixed(2).replace(/\.?0+$/, '');
+    return val.toFixed(2);
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
