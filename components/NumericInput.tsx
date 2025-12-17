@@ -69,8 +69,13 @@ export default function NumericInput({
 
   const handleIncrement = () => {
     const currentValue = value ?? min;
-    const newValue = Math.min(max, currentValue + step);
-    onChange?.(newValue);
+    // Special case: if value is 0.01, go to 1
+    if (currentValue <= 0.01) {
+      onChange?.(min);
+    } else {
+      const newValue = Math.min(max, currentValue + step);
+      onChange?.(newValue);
+    }
   };
 
   const handleDecrement = () => {
@@ -78,8 +83,8 @@ export default function NumericInput({
     // Special case: if value is exactly min (1), go to 0.01
     if (currentValue === min) {
       onChange?.(0.01);
-    } else if (currentValue < 1) {
-      // Don't allow decrementing below 1 (except the special case above)
+    } else if (currentValue <= 0.01) {
+      // Already at minimum (0.01), don't change
       return;
     } else {
       const newValue = Math.max(min, currentValue - step);
@@ -111,14 +116,12 @@ export default function NumericInput({
         <Button
           icon={<UpOutlined />}
           onClick={handleIncrement}
-          disabled={value !== undefined && value !== null && value >= max}
           size="small"
           style={{ height: '20px', padding: '0 8px' }}
         />
         <Button
           icon={<DownOutlined />}
           onClick={handleDecrement}
-          disabled={value !== undefined && value !== null && value < 1}
           size="small"
           style={{ height: '20px', padding: '0 8px' }}
         />
